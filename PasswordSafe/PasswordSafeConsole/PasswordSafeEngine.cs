@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -49,7 +50,13 @@ namespace PasswordSafeConsole
 
         internal void DeletePassword(string passwordName)
         {
+            if(!Directory.Exists(this.path) || !File.Exists($"{this.path}/{passwordName}.pw"))
+            {
+                Console.WriteLine("Password not found.");
+                return;
+            }
             File.Delete(Path.Combine(this.path, $"{passwordName}.pw"));
         }
+ 
     }
 }

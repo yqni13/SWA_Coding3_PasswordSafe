@@ -129,10 +129,11 @@ namespace PasswordSafeConsole
 
                         masterRepository.SetMasterPassword(masterPw);
                         // urgent hotfix delete old passwords after changing the master
-                        if (Directory.Exists("./passwords.pw"))
+                        if (Directory.Exists($"./passwords.pw"))
                         {
-                            Directory.Delete("./passwords.pw", true);
+                            Directory.Delete($"./passwords.pw", true);
                         }
+
                         break;
                     }
                     default:
