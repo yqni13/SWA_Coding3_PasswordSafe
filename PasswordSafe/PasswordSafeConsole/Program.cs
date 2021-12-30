@@ -1,4 +1,6 @@
-﻿using System;
+﻿using System.Configuration;
+using System.Collections.Specialized;
+using System;
 using System.IO;
 using System.Linq;
 
@@ -6,13 +8,20 @@ namespace PasswordSafeConsole
 {
     public class Program
     {
-        private static MasterPasswordRepository masterRepository = new MasterPasswordRepository("./master.pw");
+        // loading settings from configuration (xml) file
+        static string masterPwdPath = ConfigurationManager.AppSettings["path_masterPassword"];
+        
+        static string regularPwdPath = ConfigurationManager.AppSettings["path_regularPasswords"];        
+
+        // initiating necessary instances       
+        private static MasterPasswordRepository masterRepository = new MasterPasswordRepository(masterPwdPath);
         private static PasswordSafeEngine passwordSafeEngine = null;
+        
 
         public static void Main(String[] args)
         {
             Console.WriteLine("Welcome to Passwordsafe");
-
+            
             bool abort = false;
             bool unlocked = false;
             while (!abort) 
@@ -31,15 +40,13 @@ namespace PasswordSafeConsole
                         break;
                      }
                      case 1: 
-                     {
-                        Console.WriteLine("Enter path for master password");
-                        String masterPath = Console.ReadLine();
+                     {                        
                         Console.WriteLine("Enter master password");
                         String masterPw = Console.ReadLine();
-                        unlocked = masterRepository.MasterPasswordIsEqualTo(masterPath, masterPw);
+                        unlocked = masterRepository.MasterPasswordIsEqualTo(masterPw);
                         if (unlocked) 
                         {
-                            passwordSafeEngine = new PasswordSafeEngine("./passwords.pw", new CipherFacility(1, masterPw));
+                            passwordSafeEngine = new PasswordSafeEngine(regularPwdPath, new CipherFacility(1, masterPw));
                             Console.WriteLine("unlocked");
                         } else
                         {
@@ -129,9 +136,9 @@ namespace PasswordSafeConsole
 
                         masterRepository.SetMasterPassword(masterPw);
                         // urgent hotfix delete old passwords after changing the master
-                        if (Directory.Exists($"./passwords.pw"))
+                        if (Directory.Exists(regularPwdPath))
                         {
-                            Directory.Delete($"./passwords.pw", true);
+                            Directory.Delete(regularPwdPath, true);
                         }
 
                         break;
