@@ -24,7 +24,7 @@ namespace PasswordSafeConsole
                 return Enumerable.Empty<string>();
             }
 
-            /// return list of all file names assembled in dir
+            // Return list of all file names assembled in dir.
             return Directory.GetFiles(this._path).ToList().
                 Select(f => Path.GetFileName(f)).
                 Where(f => f.EndsWith(".pw")).

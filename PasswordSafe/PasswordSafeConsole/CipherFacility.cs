@@ -9,7 +9,7 @@ namespace PasswordSafeConsole
     {
         private string _masterPw;
         private int _encoderMethod;
-        ///EncodingMethodsCollection encoder = new EncodingMethodsCollection();
+        
 
         public CipherFacility() { }
 
