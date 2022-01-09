@@ -1,49 +1,64 @@
 ﻿using System.IO;
+using System.Configuration;
+using System.Security.Cryptography;
+using System.Text;
+using System;
 
 namespace PasswordSafeConsole
 {
     internal class MasterPasswordRepository
     {
         private string masterPasswordPath;
+        static string masterPwdName = ConfigurationManager.AppSettings["name_masterPassword"];
+        EncodingMethodsCollection encoder = new EncodingMethodsCollection();
+        CipherFacility cipher = new CipherFacility();
+        
 
         public MasterPasswordRepository(string masterPasswordPath)
         {
             this.masterPasswordPath = masterPasswordPath;
         }
 
-        internal bool MasterPasswordIsEqualTo(string masterPath, string masterPwToCompare)
+        internal bool MasterPasswordIsEqualTo(string masterPwToCompare)
         {
-            masterPath = masterPath + "/master.pw";
-            /*
-            if(!File.Exists(this.masterPasswordPath))
+            
+            masterPasswordPath = masterPasswordPath + "/" + masterPwdName;
+            var hash = File.ReadAllBytes(this.masterPasswordPath);
+
+            /// get hash value from console and master password to compare [task#1 from instructions]
+            var tmpSource = ASCIIEncoding.ASCII.GetBytes(masterPwToCompare);            //convert string into byte[]
+            var hashCompare = new MD5CryptoServiceProvider().ComputeHash(tmpSource);    //compute MD5 hash (size of 128bits)
+
+            var i = 0;
+            if((File.Exists(this.masterPasswordPath)) && (hash.Length == hashCompare.Length))
             {
-                return false;
+                while((i < hashCompare.Length) && (hashCompare[i] == hash[i]))
+                {
+                    ++i;
+                }
             }
-            CipherFacility decoder = new CipherFacility(0, "");
-
-            var masterPw = decoder.Decrypt(File.ReadAllBytes(this.masterPasswordPath));
-            return masterPwToCompare == masterPw;
-            */
-
-            return File.Exists(masterPath) && masterPwToCompare == File.ReadAllText(masterPath);
-
-            /*
-            return File.Exists(this.masterPasswordPath) && 
-                masterPwToCompare == File.ReadAllText(this.masterPasswordPath);
-            */
+            return i == hashCompare.Length;            
         }
 
         internal void SetMasterPassword(string masterPw)
         {
-            /*
-            CipherFacility encoder = new CipherFacility(1, masterPw);
-            
-            File.WriteAllBytes(this.masterPasswordPath, encoder.Encrypt(masterPw));
-            */
-            AdaptPath pathfinder = new AdaptPath();
+            CheckDirectoryExists();
 
-            File.WriteAllText(pathfinder.AddPath(this.masterPasswordPath) + "/master.pw", masterPw);
-            //File.WriteAllText(this.masterPasswordPath, masterPw);
+            /// hash master password to disable reading in plaintext [task#1 from instructions]
+            var tmpSource = ASCIIEncoding.ASCII.GetBytes(masterPw);              //convert string into byte[]
+            var hash = new MD5CryptoServiceProvider().ComputeHash(tmpSource);    //compute MD5 hash (size of 128bits)
+            
+            /// master password is set to location chosen via config file [task#3 from instructions]
+            File.WriteAllBytes(this.masterPasswordPath + "/" + masterPwdName, hash);            
         }
+
+        internal void CheckDirectoryExists()
+        {
+            if (!Directory.Exists(this.masterPasswordPath))
+            {
+                Directory.CreateDirectory(this.masterPasswordPath);
+            }
+        }
+
     }
 }

@@ -1,8 +1,18 @@
 {
   "version": 2,
-  "dgSpecHash": "MFErjMz8snhPWWXxCeksWCoX3ezwhp1MSF4EC60a8TlZ4N1L/pFYNB3+MYlSKIkGAn67ya5BmnhlQ8RtLKkGyg==",
+  "dgSpecHash": "PSKrVEaZU9jmom7xpVHqz1aYcfuL4JBL5aB+tQS5uMQxEqV3I4emysR8c0I8hb759XVXWXzIe2Aeo5QLa52ijg==",
   "success": true,
   "projectFilePath": "D:\\Dokumente\\GitHub\\BIF_Semester_3\\SWA\\SWA_Coding3_PasswordSafe\\PasswordSafe\\PasswordSafeConsole\\PasswordSafeConsole.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Lukas D.A. Varga\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
+    "C:\\Users\\Lukas D.A. Varga\\.nuget\\packages\\system.configuration.configurationmanager\\6.0.0\\system.configuration.configurationmanager.6.0.0.nupkg.sha512",
+    "C:\\Users\\Lukas D.A. Varga\\.nuget\\packages\\system.drawing.common\\6.0.0\\system.drawing.common.6.0.0.nupkg.sha512",
+    "C:\\Users\\Lukas D.A. Varga\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",
+    "C:\\Users\\Lukas D.A. Varga\\.nuget\\packages\\system.security.accesscontrol\\6.0.0\\system.security.accesscontrol.6.0.0.nupkg.sha512",
+    "C:\\Users\\Lukas D.A. Varga\\.nuget\\packages\\system.security.cryptography.protecteddata\\6.0.0\\system.security.cryptography.protecteddata.6.0.0.nupkg.sha512",
+    "C:\\Users\\Lukas D.A. Varga\\.nuget\\packages\\system.security.permissions\\6.0.0\\system.security.permissions.6.0.0.nupkg.sha512",
+    "C:\\Users\\Lukas D.A. Varga\\.nuget\\packages\\system.security.principal.windows\\5.0.0\\system.security.principal.windows.5.0.0.nupkg.sha512",
+    "C:\\Users\\Lukas D.A. Varga\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512"
+  ],
   "logs": []
 }

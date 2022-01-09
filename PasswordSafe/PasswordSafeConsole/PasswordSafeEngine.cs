@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -19,6 +20,7 @@ namespace PasswordSafeConsole
         { 
             if (!Directory.Exists(this.path))
             {
+                Console.WriteLine("No passwords exist.");
                 return Enumerable.Empty<string>();
             }
 
@@ -31,6 +33,11 @@ namespace PasswordSafeConsole
 
         internal string GetPassword(string passwordName)
         {
+            if(!File.Exists($"{path}/{passwordName}.pw"))
+            {
+                return "Password does not exist.";
+                
+            }
             byte[] password = File.ReadAllBytes(Path.Combine(this.path, $"{passwordName}.pw"));
             return this.cipherFacility.Decrypt(password);
         }
@@ -49,7 +56,13 @@ namespace PasswordSafeConsole
 
         internal void DeletePassword(string passwordName)
         {
+            if(!Directory.Exists(this.path) || !File.Exists($"{this.path}/{passwordName}.pw"))
+            {
+                Console.WriteLine("Password not found.");
+                return;
+            }
             File.Delete(Path.Combine(this.path, $"{passwordName}.pw"));
         }
+ 
     }
 }

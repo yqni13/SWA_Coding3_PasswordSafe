@@ -10,8 +10,11 @@ namespace PasswordSafeConsole
     {
         public CheckPwEquality() { }
 
+        
         public bool CompareNewPwd(string originPwd)
         {
+
+            /// check every new password for equality [task#2 from instructions]
             Console.WriteLine("Enter password again to compare");
             var comparePwd = Console.ReadLine();
 
