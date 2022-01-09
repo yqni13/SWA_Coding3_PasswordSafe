@@ -33,7 +33,7 @@ namespace PasswordSafeConsole
 
         internal string GetPassword(string passwordName)
         {
-            if(!File.Exists($"{path}/{passwordName}"))
+            if(!File.Exists($"{path}/{passwordName}.pw"))
             {
                 return "Password does not exist.";
                 
