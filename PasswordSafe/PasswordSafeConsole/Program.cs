@@ -46,7 +46,8 @@ namespace PasswordSafeConsole
                         unlocked = masterRepository.MasterPasswordIsEqualTo(masterPw);
                         if (unlocked) 
                         {
-                            passwordSafeEngine = new PasswordSafeEngine(regularPwdPath, new CipherFacility(1, masterPw));
+                            /// regular passwords are created in location chosen via config file [task#3 from instructions]
+                            passwordSafeEngine = new PasswordSafeEngine(regularPwdPath, new CipherFacility(masterPw));
                             Console.WriteLine("unlocked");
                         } else
                         {
