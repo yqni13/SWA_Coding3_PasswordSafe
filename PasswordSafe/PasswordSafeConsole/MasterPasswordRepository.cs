@@ -8,29 +8,27 @@ namespace PasswordSafeConsole
 {
     internal class MasterPasswordRepository
     {
-        private string masterPasswordPath;
-        static string masterPwdName = ConfigurationManager.AppSettings["name_masterPassword"];
-        EncodingMethodsCollection encoder = new EncodingMethodsCollection();
-        CipherFacility cipher = new CipherFacility();
+        private string _masterPasswordPath;
+        private readonly string _masterPwdName = ConfigurationManager.AppSettings["name_masterPassword"];        
         
 
         public MasterPasswordRepository(string masterPasswordPath)
         {
-            this.masterPasswordPath = masterPasswordPath;
+            this._masterPasswordPath = masterPasswordPath;
         }
 
         internal bool MasterPasswordIsEqualTo(string masterPwToCompare)
         {
             
-            masterPasswordPath = masterPasswordPath + "/" + masterPwdName;
-            var hash = File.ReadAllBytes(this.masterPasswordPath);
+            _masterPasswordPath = _masterPasswordPath + "/" + _masterPwdName;
+            var hash = File.ReadAllBytes(this._masterPasswordPath);
 
-            /// get hash value from console and master password to compare [task#1 from instructions]
-            var tmpSource = ASCIIEncoding.ASCII.GetBytes(masterPwToCompare);            //convert string into byte[]
-            var hashCompare = new MD5CryptoServiceProvider().ComputeHash(tmpSource);    //compute MD5 hash (size of 128bits)
+            // Get hash value from console and master password to compare [task#1 from instructions].
+            var tmpSource = ASCIIEncoding.ASCII.GetBytes(masterPwToCompare);            
+            var hashCompare = new MD5CryptoServiceProvider().ComputeHash(tmpSource);    
 
             var i = 0;
-            if((File.Exists(this.masterPasswordPath)) && (hash.Length == hashCompare.Length))
+            if((File.Exists(this._masterPasswordPath)) && (hash.Length == hashCompare.Length))
             {
                 while((i < hashCompare.Length) && (hashCompare[i] == hash[i]))
                 {
@@ -44,19 +42,19 @@ namespace PasswordSafeConsole
         {
             CheckDirectoryExists();
 
-            /// hash master password to disable reading in plaintext [task#1 from instructions]
-            var tmpSource = ASCIIEncoding.ASCII.GetBytes(masterPw);              //convert string into byte[]
-            var hash = new MD5CryptoServiceProvider().ComputeHash(tmpSource);    //compute MD5 hash (size of 128bits)
+            // Hash master password to disable reading in plaintext [task#1 from instructions].
+            var tmpSource = ASCIIEncoding.ASCII.GetBytes(masterPw);              
+            var hash = new MD5CryptoServiceProvider().ComputeHash(tmpSource);    
             
-            /// master password is set to location chosen via config file [task#3 from instructions]
-            File.WriteAllBytes(this.masterPasswordPath + "/" + masterPwdName, hash);            
+            // Master password is set to location chosen via config file [task#3 from instructions].
+            File.WriteAllBytes(this._masterPasswordPath + "/" + _masterPwdName, hash);            
         }
 
         internal void CheckDirectoryExists()
         {
-            if (!Directory.Exists(this.masterPasswordPath))
+            if (!Directory.Exists(this._masterPasswordPath))
             {
-                Directory.CreateDirectory(this.masterPasswordPath);
+                Directory.CreateDirectory(this._masterPasswordPath);
             }
         }
 

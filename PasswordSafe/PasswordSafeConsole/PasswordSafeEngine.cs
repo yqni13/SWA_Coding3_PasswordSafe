@@ -7,25 +7,25 @@ namespace PasswordSafeConsole
 {
     internal class PasswordSafeEngine
     {
-        private string path;
-        private CipherFacility cipherFacility;
+        private string _path;
+        private CipherFacility _cipherFacility;
 
         public PasswordSafeEngine(string path, CipherFacility cipherFacility)
         {
-            this.path = path;
-            this.cipherFacility = cipherFacility;
+            this._path = path;
+            this._cipherFacility = cipherFacility;
         }
 
         internal IEnumerable<string> GetStoredPasswords()
         { 
-            if (!Directory.Exists(this.path))
+            if (!Directory.Exists(this._path))
             {
                 Console.WriteLine("No passwords exist.");
                 return Enumerable.Empty<string>();
             }
 
             /// return list of all file names assembled in dir
-            return Directory.GetFiles(this.path).ToList().
+            return Directory.GetFiles(this._path).ToList().
                 Select(f => Path.GetFileName(f)).
                 Where(f => f.EndsWith(".pw")).
                 Select(f => f.Split(".")[0]);
@@ -33,35 +33,35 @@ namespace PasswordSafeConsole
 
         internal string GetPassword(string passwordName)
         {
-            if(!File.Exists($"{path}/{passwordName}.pw"))
+            if(!File.Exists($"{_path}/{passwordName}.pw"))
             {
                 return "Password does not exist.";
                 
             }
-            byte[] password = File.ReadAllBytes(Path.Combine(this.path, $"{passwordName}.pw"));
-            return this.cipherFacility.Decrypt(password);
+            byte[] password = File.ReadAllBytes(Path.Combine(this._path, $"{passwordName}.pw"));
+            return this._cipherFacility.Decrypt(password);
         }
 
         internal void AddNewPassword(PasswordInfo passwordInfo)
         {
-            if (!Directory.Exists(this.path))
+            if (!Directory.Exists(this._path))
             {
-                Directory.CreateDirectory(this.path);
+                Directory.CreateDirectory(this._path);
             }
 
             File.WriteAllBytes(
-                Path.Combine(this.path, $"{passwordInfo.PasswordName}.pw"),
-                this.cipherFacility.Encrypt(passwordInfo.Password));
+                Path.Combine(this._path, $"{passwordInfo.PasswordName}.pw"),
+                this._cipherFacility.Encrypt(passwordInfo.Password));
         }
 
         internal void DeletePassword(string passwordName)
         {
-            if(!Directory.Exists(this.path) || !File.Exists($"{this.path}/{passwordName}.pw"))
+            if(!Directory.Exists(this._path) || !File.Exists($"{this._path}/{passwordName}.pw"))
             {
                 Console.WriteLine("Password not found.");
                 return;
             }
-            File.Delete(Path.Combine(this.path, $"{passwordName}.pw"));
+            File.Delete(Path.Combine(this._path, $"{passwordName}.pw"));
         }
  
     }

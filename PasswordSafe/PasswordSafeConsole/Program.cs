@@ -8,14 +8,11 @@ namespace PasswordSafeConsole
 {
     public class Program
     {
-        // loading settings from configuration (xml) file
-        static string masterPwdPath = ConfigurationManager.AppSettings["path_masterPassword"];
-        
-        static string regularPwdPath = ConfigurationManager.AppSettings["path_regularPasswords"];        
-
-        // initiating necessary instances       
-        private static MasterPasswordRepository masterRepository = new MasterPasswordRepository(masterPwdPath);
-        private static PasswordSafeEngine passwordSafeEngine = null;
+        // Loading settings from configuration (xml) file.
+        private static string _masterPwdPath = ConfigurationManager.AppSettings["path_masterPassword"];        
+        private static string _regularPwdPath = ConfigurationManager.AppSettings["path_regularPasswords"];                
+        private static MasterPasswordRepository _masterRepository = new MasterPasswordRepository(_masterPwdPath);
+        private static PasswordSafeEngine _passwordSafeEngine = null;
         
 
         public static void Main(String[] args)
@@ -43,11 +40,11 @@ namespace PasswordSafeConsole
                      {                        
                         Console.WriteLine("Enter master password");
                         String masterPw = Console.ReadLine();
-                        unlocked = masterRepository.MasterPasswordIsEqualTo(masterPw);
+                        unlocked = _masterRepository.MasterPasswordIsEqualTo(masterPw);
                         if (unlocked) 
                         {
-                            /// regular passwords are created in location chosen via config file [task#3 from instructions]
-                            passwordSafeEngine = new PasswordSafeEngine(regularPwdPath, new CipherFacility(masterPw));
+                            // Regular passwords are created in location chosen via config file [task#3 from instructions].
+                            _passwordSafeEngine = new PasswordSafeEngine(_regularPwdPath, new CipherFacility(masterPw));
                             Console.WriteLine("unlocked");
                         } else
                         {
@@ -59,7 +56,7 @@ namespace PasswordSafeConsole
                      {
                         if (unlocked)
                         {
-                            passwordSafeEngine.GetStoredPasswords().ToList().ForEach(pw=>Console.WriteLine(pw));
+                            _passwordSafeEngine.GetStoredPasswords().ToList().ForEach(pw=>Console.WriteLine(pw));
                         }
                         else
                         {
@@ -72,7 +69,7 @@ namespace PasswordSafeConsole
                         {
                             Console.WriteLine("Enter password name");
                             String passwordName = Console.ReadLine();
-                            Console.WriteLine(passwordSafeEngine.GetPassword(passwordName));
+                            Console.WriteLine(_passwordSafeEngine.GetPassword(passwordName));
                         }
                         else
                         {
@@ -90,15 +87,10 @@ namespace PasswordSafeConsole
                             Console.WriteLine("Enter password");
                             var password = Console.ReadLine();
 
-                            CheckPwEquality pwdCheck = new CheckPwEquality();
-                            var checkedPwd = pwdCheck.CompareNewPwd(password);
-
-                            if (!checkedPwd) 
-                            {
+                            if (!CheckPwEquality.CompareNewPwd(password))
                                 break;
-                            }
 
-                            passwordSafeEngine.AddNewPassword(new PasswordInfo(password, passwordName));                           
+                            _passwordSafeEngine.AddNewPassword(new PasswordInfo(password, passwordName));                           
                         }
                         else
                         {
@@ -112,7 +104,7 @@ namespace PasswordSafeConsole
                         {
                             Console.WriteLine("Enter password name");
                             String passwordName = Console.ReadLine();
-                            passwordSafeEngine.DeletePassword(passwordName);
+                            _passwordSafeEngine.DeletePassword(passwordName);
                         }
                         else
                         {
@@ -123,23 +115,19 @@ namespace PasswordSafeConsole
                     case 6:
                     {
                         unlocked = false;
-                        passwordSafeEngine = null;
+                        _passwordSafeEngine = null;
                         Console.WriteLine("Enter new master password ! (Warning you will loose all already stored passwords)");
-                        String masterPw = Console.ReadLine();
+                        string masterPw = Console.ReadLine();
 
-                        CheckPwEquality pwdCheck = new CheckPwEquality();
-                        var checkedPwd = pwdCheck.CompareNewPwd(masterPw);
-
-                        if (!checkedPwd)
-                        {
+                        if (!CheckPwEquality.CompareNewPwd(masterPw))
                             break;
-                        }
 
-                        masterRepository.SetMasterPassword(masterPw);
-                        // urgent hotfix delete old passwords after changing the master
-                        if (Directory.Exists(regularPwdPath))
+                        _masterRepository.SetMasterPassword(masterPw);
+
+                        // Urgent hotfix delete old passwords after changing the master.
+                        if (Directory.Exists(_regularPwdPath))
                         {
-                            Directory.Delete(regularPwdPath, true);
+                            Directory.Delete(_regularPwdPath, true);
                         }
 
                         break;
