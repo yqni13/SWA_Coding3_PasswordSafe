@@ -1,5 +1,4 @@
 ﻿using System.Configuration;
-using System.Collections.Specialized;
 using System;
 using System.IO;
 using System.Linq;
@@ -10,7 +9,8 @@ namespace PasswordSafeConsole
     {
         // Loading settings from configuration (xml) file.
         private static string _masterPwdPath = ConfigurationManager.AppSettings["path_masterPassword"];        
-        private static string _regularPwdPath = ConfigurationManager.AppSettings["path_regularPasswords"];                
+        private static string _regularPwdPath = ConfigurationManager.AppSettings["path_regularPasswords"];
+        
         private static MasterPasswordRepository _masterRepository = new MasterPasswordRepository(_masterPwdPath);
         private static PasswordSafeEngine _passwordSafeEngine = null;
         
@@ -45,7 +45,7 @@ namespace PasswordSafeConsole
                         {
                             // Regular passwords are created in location chosen via config file [task#3 from instructions].
                             _passwordSafeEngine = new PasswordSafeEngine(_regularPwdPath, new CipherFacility(masterPw));
-                            Console.WriteLine("unlocked");
+                            Console.WriteLine("unlocked"); 
                         } else
                         {
                             Console.WriteLine("master password did not match ! Failed to unlock.");

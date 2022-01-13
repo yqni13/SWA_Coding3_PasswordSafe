@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PasswordSafeConsole.Interfaces;
+using System;
 using System.Configuration;
 using System.Security.Cryptography;
 using System.Text;
@@ -9,7 +10,9 @@ namespace PasswordSafeConsole
     {
         private string _masterPw;
         private int _encoderMethod;
-        
+        private IEncoding encoderAES = new EncodingAES();
+        private IEncoding encoder3DES = new Encoding3DES();
+
 
         public CipherFacility() { }
 
@@ -35,19 +38,19 @@ namespace PasswordSafeConsole
         public string Decrypt(byte[] crypted)
         {
             var key = GetKey(this._masterPw);
-            
+
             // Choose encoding method by int from config file [task#4 from instructions].
             switch (_encoderMethod)
             {
                 case (0):                    
-                    return EncodingMethodsCollection.DecryptionAES(key, crypted);                 
+                    return encoderAES.Decryption(key, crypted);                 
                 case (1):                    
-                    return EncodingMethodsCollection.Decryption3DES(key, crypted);
+                    return encoder3DES.Decryption(key, crypted);
                 // case (2):
-                    // Decrypt with new method from EncodingMethodsCollection [PLACEHOLDER].
+                    // Decrypt with new method from interface [PLACEHOLDER].
                     // break;
                 default:                    
-                    return EncodingMethodsCollection.DecryptionAES(key, crypted);
+                    return encoderAES.Decryption(key, crypted);
             }
 
         }
@@ -60,15 +63,15 @@ namespace PasswordSafeConsole
             switch (_encoderMethod)
             {
                 case (0):
-                    return EncodingMethodsCollection.EncryptionAES(key, plain);
+                    return encoderAES.Encryption(key, plain);
                 case (1):
-                    return EncodingMethodsCollection.Encryption3DES(key, plain);
+                    return encoder3DES.Encryption(key, plain);
                 // case (2):
-                    // Encrypt with new method from EncodingMethodsCollection [PLACEHOLDER].
+                    // Encrypt with new method from interface [PLACEHOLDER].
                     // break;
                 default:
                     Console.WriteLine("\nInvalid config input 'encoder'.\nDefault encryption method chosen.\n");
-                    return EncodingMethodsCollection.EncryptionAES(key, plain);
+                    return encoderAES.Encryption(key, plain);
             }
 
         }
