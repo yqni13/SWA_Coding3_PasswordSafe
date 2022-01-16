@@ -48,7 +48,10 @@ namespace PasswordSafeConsole
                             Console.WriteLine("unlocked"); 
                         } else
                         {
-                            Console.WriteLine("master password did not match ! Failed to unlock.");
+                            if (_masterRepository.masterPwExist)
+                                Console.WriteLine("master password did not match ! Failed to unlock.");
+                            else
+                                Console.WriteLine("Error. Master password not set.");
                         }
                         break;
                      }

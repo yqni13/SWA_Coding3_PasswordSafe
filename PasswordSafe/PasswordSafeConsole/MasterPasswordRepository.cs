@@ -9,17 +9,24 @@ namespace PasswordSafeConsole
     internal class MasterPasswordRepository
     {
         private string _masterPasswordPath;
-        private readonly string _masterPwdName = ConfigurationManager.AppSettings["name_masterPassword"];        
+        private readonly string _masterPwdName = ConfigurationManager.AppSettings["name_masterPassword"];
+        public bool masterPwExist = false;
         
 
         public MasterPasswordRepository(string masterPasswordPath)
         {
             this._masterPasswordPath = masterPasswordPath;
+            if(File.Exists(_masterPasswordPath + "/" + _masterPwdName))
+            {
+                masterPwExist = true;
+            }
         }
 
         internal bool MasterPasswordIsEqualTo(string masterPwToCompare)
         {
-            
+            if (!masterPwExist)
+                return false;
+
             _masterPasswordPath = _masterPasswordPath + "/" + _masterPwdName;
             var hash = File.ReadAllBytes(this._masterPasswordPath);
 
@@ -47,7 +54,8 @@ namespace PasswordSafeConsole
             var hash = new MD5CryptoServiceProvider().ComputeHash(tmpSource);    
             
             // Master password is set to location chosen via config file [task#3 from instructions].
-            File.WriteAllBytes(this._masterPasswordPath + "/" + _masterPwdName, hash);            
+            File.WriteAllBytes(this._masterPasswordPath + "/" + _masterPwdName, hash);
+            masterPwExist = true;
         }
 
         internal void CheckDirectoryExists()
